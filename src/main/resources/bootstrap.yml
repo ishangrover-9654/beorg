@@ -1,7 +1,0 @@
-spring:
-  data:
-    arangodb:
-      database: beorgdb
-      hosts: 127.0.0.1:8529
-      password: 123456
-      user: root
