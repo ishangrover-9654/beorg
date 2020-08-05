@@ -1,5 +1,6 @@
 package com.ishan.rd.beorg.entity;
 
+import com.arangodb.springframework.annotation.ArangoId;
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndex;
 import com.arangodb.springframework.annotation.Relations;
@@ -13,17 +14,17 @@ import org.springframework.data.annotation.Id;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor
-@Document
+@Document(value = "medIssueTag")
 @HashIndex(fields = { "name"}, unique = true)
 public class IssueTag {
 
-    @Id
-    @JsonProperty
-    private String id;
+
+    @JsonProperty @ArangoId
+    private String _id;
     @JsonProperty
     private String name;
 
     @Relations(edges = BelongsToSpeciality.class, lazy = true)
-    private List<SpecialityTag> speciality;
+    private SpecialityTag speciality;
     private boolean standard;
 }

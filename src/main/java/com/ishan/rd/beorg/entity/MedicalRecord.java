@@ -1,5 +1,7 @@
 package com.ishan.rd.beorg.entity;
 
+import com.arangodb.entity.KeyType;
+import com.arangodb.springframework.annotation.ArangoId;
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndex;
 import com.arangodb.springframework.annotation.Relations;
@@ -9,11 +11,12 @@ import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
-@Document @Getter @Setter @NoArgsConstructor
-@HashIndex(fields = { "personName", "dateOfVisit"}, unique = true)
+@Document(allowUserKeys = true, keyIncrement = 1, keyType = KeyType.autoincrement)
+@Getter @Setter @NoArgsConstructor
+@HashIndex(fields = { "personName"})
 public class MedicalRecord {
-    @Id
-    private String id;
+    @ArangoId
+    private String _id;
     private String userId = "1";
     private String title;
     private String personName;

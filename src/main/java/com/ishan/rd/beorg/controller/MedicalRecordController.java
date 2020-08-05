@@ -1,6 +1,8 @@
 package com.ishan.rd.beorg.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ishan.rd.beorg.entity.MedicalRecord;
+import com.ishan.rd.beorg.entity.MedicalRecordReqDTO;
 import com.ishan.rd.beorg.entity.edges.HavingIssueEdge;
 import com.ishan.rd.beorg.service.MedIssueTagService;
 import com.ishan.rd.beorg.service.MedicalRecordService;
@@ -20,8 +22,8 @@ public class MedicalRecordController {
     MedIssueTagService issueTagService;
 
     @PostMapping
-    public ResponseEntity<MedicalRecord> save(@RequestBody MedicalRecord medicalRecord){
-        MedicalRecord medicalRecord1 = recordService.save( medicalRecord);
-        return new ResponseEntity(medicalRecord1,HttpStatus.CREATED);
+    public ResponseEntity<MedicalRecord> save2(@RequestBody MedicalRecordReqDTO medicalRecordReqDTO) throws JsonProcessingException {
+         recordService.save2(medicalRecordReqDTO);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

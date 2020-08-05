@@ -24,6 +24,7 @@ public class MedIssueTagService {
     }
 
     public Iterable<IssueTag> findAll() {
+        System.out.println("in findall");
         return issueTagRepository.findAll();
     }
 
