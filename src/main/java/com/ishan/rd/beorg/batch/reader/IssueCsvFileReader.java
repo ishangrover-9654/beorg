@@ -1,6 +1,6 @@
 package com.ishan.rd.beorg.batch.reader;
 
-import com.ishan.rd.beorg.entity.IssueImportDTO;
+import com.ishan.rd.beorg.domain.dto.IssueImportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 

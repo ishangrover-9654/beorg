@@ -8,3 +8,14 @@ spring:
     autoconfigure:
         exclude:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    batch:
+        job:
+            enabled: false
+
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 5MB
+            max-request-size: 215MB
+file:
+    upload-dir: /Users/hp/uploads

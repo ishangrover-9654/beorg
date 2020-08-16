@@ -22,7 +22,7 @@ package com.ishan.rd.beorg;/*
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.ishan.rd.beorg.core.mapping.CustomMappingTest;
+import com.ishan.rd.beorg.mapping.CustomMappingTest;
 import com.ishan.rd.beorg.testdata.Person;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

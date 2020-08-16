@@ -1,6 +1,6 @@
 package com.ishan.rd.beorg.batch.writer;
 
-import com.ishan.rd.beorg.entity.IssueTag;
+import com.ishan.rd.beorg.domain.entities.IssueTag;
 import com.ishan.rd.beorg.repository.MedIssueTagRepository;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;

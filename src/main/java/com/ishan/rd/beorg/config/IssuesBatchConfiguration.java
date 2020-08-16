@@ -2,8 +2,8 @@ package com.ishan.rd.beorg.config;
 
 import com.ishan.rd.beorg.batch.reader.IssueCsvFileReader;
 import com.ishan.rd.beorg.batch.writer.IssueImportArangoWriter;
-import com.ishan.rd.beorg.entity.IssueImportDTO;
-import com.ishan.rd.beorg.entity.IssueTag;
+import com.ishan.rd.beorg.domain.dto.IssueImportDTO;
+import com.ishan.rd.beorg.domain.entities.IssueTag;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
 @Configuration

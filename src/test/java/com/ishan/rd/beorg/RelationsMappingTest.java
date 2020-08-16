@@ -1,8 +1,8 @@
 package com.ishan.rd.beorg;
 
 import com.arangodb.springframework.annotation.Relations;
-import com.ishan.rd.beorg.core.mapping.testdata.BasicEdgeTestEntity;
-import com.ishan.rd.beorg.core.mapping.testdata.BasicTestEntity;
+import com.ishan.rd.beorg.mapping.testdata.BasicEdgeTestEntity;
+import com.ishan.rd.beorg.mapping.testdata.BasicTestEntity;
 import org.junit.Test;
 
 import java.util.Arrays;

@@ -1,6 +1,6 @@
 package com.ishan.rd.beorg.controller;
 
-import com.ishan.rd.beorg.entity.IssueTag;
+import com.ishan.rd.beorg.domain.entities.IssueTag;
 import com.ishan.rd.beorg.service.MedIssueTagService;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;

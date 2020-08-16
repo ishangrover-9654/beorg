@@ -1,7 +1,7 @@
 package com.ishan.rd.beorg.repository;
 
 import com.arangodb.springframework.repository.ArangoRepository;
-import com.ishan.rd.beorg.entity.edges.HavingIssueEdge;
+import com.ishan.rd.beorg.domain.edges.HavingIssueEdge;
 import org.springframework.stereotype.Repository;
 
 @Repository

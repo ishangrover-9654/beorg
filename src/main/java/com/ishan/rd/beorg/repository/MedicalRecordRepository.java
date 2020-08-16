@@ -1,7 +1,7 @@
 package com.ishan.rd.beorg.repository;
 
 import com.arangodb.springframework.repository.ArangoRepository;
-import com.ishan.rd.beorg.entity.MedicalRecord;
+import com.ishan.rd.beorg.domain.entities.MedicalRecord;
 import org.springframework.stereotype.Repository;
 
 @Repository

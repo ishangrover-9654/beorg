@@ -2,34 +2,31 @@ package com.ishan.rd.beorg.service;
 
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDatabase;
-import com.arangodb.entity.BaseDocument;
-import com.arangodb.entity.CollectionType;
-import com.arangodb.entity.KeyType;
-import com.arangodb.entity.StreamTransactionEntity;
+import com.arangodb.entity.*;
 import com.arangodb.model.*;
 import com.arangodb.springframework.core.ArangoOperations;
-import com.arangodb.velocypack.VPack;
-import com.arangodb.velocypack.VPackBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.ishan.rd.beorg.entity.IssueTag;
-import com.ishan.rd.beorg.entity.MedicalRecord;
-import com.ishan.rd.beorg.entity.MedicalRecordReqDTO;
-import com.ishan.rd.beorg.entity.edges.HavingIssueEdge;
+import com.ishan.rd.beorg.domain.UploadFileResponse;
+import com.ishan.rd.beorg.domain.dto.BaseEdgeDto;
+import com.ishan.rd.beorg.domain.entities.IssueTag;
+import com.ishan.rd.beorg.domain.dto.MedIssueDto;
+import com.ishan.rd.beorg.domain.entities.MedicalRecord;
+import com.ishan.rd.beorg.domain.dto.MedicalRecordDto;
+import com.ishan.rd.beorg.domain.edges.HavingIssueEdge;
+import com.ishan.rd.beorg.mapping.MedicalRecordMapper;
 import com.ishan.rd.beorg.repository.HavingIssueEdgeRepository;
 import com.ishan.rd.beorg.repository.MedIssueTagRepository;
 import com.ishan.rd.beorg.repository.MedicalRecordRepository;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service @Slf4j
@@ -46,6 +43,10 @@ public class MedicalRecordService {
     MedIssueTagRepository issueTagRepository;
     @Autowired
     ArangoOperations template;
+    @Autowired
+    MedicalRecordMapper medicalRecordMapper;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     public MedicalRecord save1(MedicalRecord medicalRecord){
 
@@ -98,7 +99,9 @@ public class MedicalRecordService {
     }
 
 
-    public void save2(MedicalRecordReqDTO medicalRecordReqDTO) throws JsonProcessingException {
+    public void save2(MedicalRecordDto medicalRecordDto) {
+
+        //TODO - Create below schema at start up
         ArangoDatabase db = template.driver().db("beorgdb");
         template.collection(C_MED_ISSUES, new CollectionCreateOptions().
                 keyOptions(false, KeyType.autoincrement, 1,1));
@@ -110,39 +113,45 @@ public class MedicalRecordService {
                 keyOptions(false, KeyType.autoincrement, 1,1).
                 type(CollectionType.EDGES));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.valueToTree(medicalRecordReqDTO);
-        String issuesJsonStr = objectMapper.writeValueAsString(
-                ((ObjectNode)rootNode).remove("issues"));
+        //TODO - Explore through db.transactions() or better way to perform transactions
+        StreamTransactionEntity tx =db.beginStreamTransaction(new StreamTransactionOptions()
+        .readCollections().writeCollections(C_MED_ISSUES, C_MED_RECORD, E_HAVING_ISSUE).
+                readCollections(C_MED_ISSUES, C_MED_RECORD));
 
-        String medicalRecordJsonStr = objectMapper.writeValueAsString(rootNode);
-        log.info(medicalRecordJsonStr);
-        log.info(issuesJsonStr);
+        DocumentCreateOptions opts = new DocumentCreateOptions().streamTransactionId(tx.getId());
 
-        /*medicalRecord.setTitle("title");
-        VPack vPack = new VPack.Builder().build();
-        vPack.serialize(medicalRecord);*/
+        List<UploadFileResponse> uploadFileResponse = medicalRecordDto.getImageFiles().stream().
+                map(file -> uploadFile(file)).collect(Collectors.toList());
+        //Create medical record
+        MedicalRecord medicalRecord = medicalRecordMapper.dtoToEntity(medicalRecordDto);
+        medicalRecord.setImageFiles(uploadFileResponse);
+        DocumentCreateEntity<MedicalRecord> txMedRec =
+                db.collection(C_MED_RECORD).insertDocument(medicalRecord, opts);
 
-       // template.collection("", new CollectionCreateOptions().keyOptions())
-        final TransactionOptions options = new TransactionOptions()
-                .writeCollections(C_MED_ISSUES, C_MED_RECORD, E_HAVING_ISSUE).
-                        readCollections(C_MED_ISSUES, C_MED_RECORD);
-        String action = "function () { "
-                + "var db = require('internal').db;"
-                + "var medDoc = db." + C_MED_RECORD + ".save("+medicalRecordJsonStr+");"
-                + "let issDoc = db." + C_MED_ISSUES + ".save("+issuesJsonStr+");"
-                + "return issDoc"
-              //  + "`Insert {_from : ${medDoc._id} , _to : ${issDoc._id} } in "+ E_HAVING_ISSUE+"`"
-               // + "db._query(`FOR y in issDoc "
-                  //+ "`Insert {_from : ${medDoc._id} , _to : y._id } into "+ E_HAVING_ISSUE+"`"
-              //  + "db." + E_HAVING_ISSUE + ".save({_from :"
-             //   +  "${medDoc._id}, _to : y._id}));`"
-                 + "}";
+        //Create new Issue tags if any
+        MultiDocumentEntity<DocumentCreateEntity<MedIssueDto>> txIssueTag  =
+                db.collection(C_MED_ISSUES).insertDocuments(medicalRecordDto.getIssues(),
+                opts.overwriteMode(OverwriteMode.ignore));
 
-        String res  = db.transaction(action, String.class,options);
-        log.info(res);
-       // db.
+        //Create Edge for Medical record with multiple issue tags
+        List<BaseEdgeDto> havingIssueEdges = txIssueTag.getDocuments().stream().
+                map(doc -> new BaseEdgeDto(txMedRec.getId(), doc.getId())).collect(Collectors.toList());
+        db.collection(E_HAVING_ISSUE).insertDocuments(havingIssueEdges, opts);
 
 
+        db.commitStreamTransaction(tx.getId());
+
+    }
+
+    public UploadFileResponse uploadFile(MultipartFile file) {
+        String fileName = fileStorageService.storeFile(file);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+
+        return new UploadFileResponse(fileName, fileDownloadUri,
+                file.getContentType(), file.getSize());
     }
 }

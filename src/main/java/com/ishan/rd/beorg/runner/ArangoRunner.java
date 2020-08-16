@@ -1,6 +1,6 @@
 package com.ishan.rd.beorg.runner;
 
-import com.ishan.rd.beorg.entity.IssueTag;
+import com.ishan.rd.beorg.domain.entities.IssueTag;
 import com.ishan.rd.beorg.repository.MedIssueTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

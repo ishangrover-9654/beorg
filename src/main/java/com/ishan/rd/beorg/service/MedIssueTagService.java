@@ -1,7 +1,7 @@
 package com.ishan.rd.beorg.service;
 
 import com.ishan.rd.beorg.batch.launcher.IssueDataImportLauncher;
-import com.ishan.rd.beorg.entity.IssueTag;
+import com.ishan.rd.beorg.domain.entities.IssueTag;
 import com.ishan.rd.beorg.repository.MedIssueTagRepository;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;

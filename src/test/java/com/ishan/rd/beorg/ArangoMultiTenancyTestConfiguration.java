@@ -23,7 +23,7 @@ package com.arangodb.springframework;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.ishan.rd.beorg.core.mapping.CustomMappingTest;
+import com.ishan.rd.beorg.mapping.CustomMappingTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
