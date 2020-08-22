@@ -1,6 +1,6 @@
 package com.ishan.rd.beorg.runner;
 
-import com.ishan.rd.beorg.domain.entities.IssueTag;
+import com.ishan.rd.beorg.domain.entities.MedIssueTag;
 import com.ishan.rd.beorg.repository.MedIssueTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,10 +15,10 @@ public class ArangoRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("here");
-        IssueTag issueTag = new IssueTag();
+        MedIssueTag issueTag = new MedIssueTag();
         issueTag.setName("Fever");
 
-        IssueTag issueTag1 = medIssueTagRepository.save(issueTag);
+        MedIssueTag issueTag1 = medIssueTagRepository.save(issueTag);
         System.out.println(issueTag1);
     }
 }

@@ -17,5 +17,9 @@ spring:
             enabled: true
             file-size-threshold: 5MB
             max-request-size: 215MB
+
+    http:
+        multipart:
+            enabled: true
 file:
     upload-dir: /Users/hp/uploads

@@ -1,6 +1,6 @@
 package com.ishan.rd.beorg.controller;
 
-import com.ishan.rd.beorg.domain.entities.IssueTag;
+import com.ishan.rd.beorg.domain.entities.MedIssueTag;
 import com.ishan.rd.beorg.service.MedIssueTagService;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -22,15 +22,15 @@ public class MedIssueTagController {
     MedIssueTagService issueTagService;
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody List<IssueTag> issueTagList){
+    public ResponseEntity<?> save(@RequestBody List<MedIssueTag> issueTagList){
         issueTagService.saveAll(issueTagList);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<IssueTag>> getAll(){
+    public ResponseEntity<List<MedIssueTag>> getAll(){
         //System.out.println("in get all");
-        Iterable<IssueTag> issueTags = issueTagService.findAll();
+        Iterable<MedIssueTag> issueTags = issueTagService.findAll();
         //System.out.println(issueTags);
         return new ResponseEntity(issueTags, HttpStatus.OK);
     }

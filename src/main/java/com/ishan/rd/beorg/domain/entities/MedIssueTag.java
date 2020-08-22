@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter @Setter @NoArgsConstructor @ToString
 @Document(value = "medIssueTag")
 @HashIndex(fields = { "name"}, unique = true)
-public class IssueTag {
+public class MedIssueTag {
 
 
     @JsonProperty @ArangoId

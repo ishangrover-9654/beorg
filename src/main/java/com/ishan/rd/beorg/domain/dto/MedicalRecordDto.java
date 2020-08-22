@@ -7,8 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Getter
-@Setter @ToString
+
+@Setter @Getter @ToString
 public class MedicalRecordDto {
 
     private String _id;

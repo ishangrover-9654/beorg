@@ -1,7 +1,7 @@
 package com.ishan.rd.beorg.service;
 
 import com.ishan.rd.beorg.batch.launcher.IssueDataImportLauncher;
-import com.ishan.rd.beorg.domain.entities.IssueTag;
+import com.ishan.rd.beorg.domain.entities.MedIssueTag;
 import com.ishan.rd.beorg.repository.MedIssueTagRepository;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -19,11 +19,11 @@ public class MedIssueTagService {
     @Autowired
     IssueDataImportLauncher issueDataImportLauncher;
 
-    public void saveAll(Collection<IssueTag> issueTagList){
+    public void saveAll(Collection<MedIssueTag> issueTagList){
         issueTagRepository.saveAll(issueTagList);
     }
 
-    public Iterable<IssueTag> findAll() {
+    public Iterable<MedIssueTag> findAll() {
         System.out.println("in findall");
         return issueTagRepository.findAll();
     }

@@ -8,13 +8,12 @@ import com.arangodb.springframework.annotation.Relations;
 import com.ishan.rd.beorg.domain.UploadFileResponse;
 import com.ishan.rd.beorg.domain.edges.HavingIssueEdge;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Document(allowUserKeys = true, keyIncrement = 1, keyType = KeyType.autoincrement)
-@Getter @Setter @NoArgsConstructor
 @HashIndex(fields = { "personName"})
+@Getter @Setter
 public class MedicalRecord {
     @ArangoId
     private String _id;
@@ -24,7 +23,7 @@ public class MedicalRecord {
     private List<String> category;
 
     @Relations(edges = HavingIssueEdge.class, lazy = true)
-    private List<IssueTag> issues;
+    private List<MedIssueTag> issues;
     private List<String> medicines;
     private List<String> doctors;
     private String centerName;

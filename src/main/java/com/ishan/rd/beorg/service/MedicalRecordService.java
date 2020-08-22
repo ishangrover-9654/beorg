@@ -5,10 +5,9 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.*;
 import com.arangodb.model.*;
 import com.arangodb.springframework.core.ArangoOperations;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ishan.rd.beorg.domain.UploadFileResponse;
 import com.ishan.rd.beorg.domain.dto.BaseEdgeDto;
-import com.ishan.rd.beorg.domain.entities.IssueTag;
+import com.ishan.rd.beorg.domain.entities.MedIssueTag;
 import com.ishan.rd.beorg.domain.dto.MedIssueDto;
 import com.ishan.rd.beorg.domain.entities.MedicalRecord;
 import com.ishan.rd.beorg.domain.dto.MedicalRecordDto;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class MedicalRecordService {
     @Autowired
     HavingIssueEdgeRepository havingIssueEdgeRepository;
     @Autowired
-    MedIssueTagRepository issueTagRepository;
+    MedIssueTagRepository medIssueTagRepository;
     @Autowired
     ArangoOperations template;
     @Autowired
@@ -52,10 +51,10 @@ public class MedicalRecordService {
 
 
 
-        issueTagRepository.saveAll(medicalRecord.getIssues());
+        medIssueTagRepository.saveAll(medicalRecord.getIssues());
         MedicalRecord createdMedicalRecord = recordRepository.save(medicalRecord);
 
-        IssueTag issueTag = medicalRecord.getIssues().get(0);
+        MedIssueTag issueTag = medicalRecord.getIssues().get(0);
         /*Optional<IssueTag> medIssueTagOptional = issueTagRepository.findByName(issueTag.getName());
         medIssueTagOptional.ifPresent( medIssueTag1 ->
                 havingIssueEdgeRepository.save(new HavingIssueEdge(createdMedicalRecord, medIssueTag1)));*/
@@ -99,7 +98,7 @@ public class MedicalRecordService {
     }
 
 
-    public void save2(MedicalRecordDto medicalRecordDto) {
+    public void save2(MedicalRecordDto medicalRecordDto, MultipartFile[] imageFiles) {
 
         //TODO - Create below schema at start up
         ArangoDatabase db = template.driver().db("beorgdb");
@@ -120,7 +119,7 @@ public class MedicalRecordService {
 
         DocumentCreateOptions opts = new DocumentCreateOptions().streamTransactionId(tx.getId());
 
-        List<UploadFileResponse> uploadFileResponse = medicalRecordDto.getImageFiles().stream().
+        List<UploadFileResponse> uploadFileResponse = Arrays.asList(imageFiles).stream().
                 map(file -> uploadFile(file)).collect(Collectors.toList());
         //Create medical record
         MedicalRecord medicalRecord = medicalRecordMapper.dtoToEntity(medicalRecordDto);

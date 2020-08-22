@@ -18,15 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class MedicalRecordController {
 
     @Autowired
-    MedicalRecordService recordService;
+    MedicalRecordService medicalRecordService;
     @Autowired
     MedIssueTagService issueTagService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<MedicalRecord> save2(@RequestPart MedicalRecordDto medicalRecordDTO,
-                                               @RequestPart(value = "imageFiles")MultipartFile[] imageFiles) throws JsonProcessingException {
-        System.out.println(imageFiles[0].getName());
-        recordService.save2(medicalRecordDTO);
+    public ResponseEntity<MedicalRecord> save2(@RequestPart("medicalRecord") MedicalRecordDto medicalRecordDTO,
+                                               @RequestPart(value = "files") MultipartFile[] imageFiles) {
+        //System.out.println(imageFiles[0].getName());
+        System.out.println(imageFiles.length);
+        medicalRecordService.save2(medicalRecordDTO, imageFiles );
         return new ResponseEntity(HttpStatus.CREATED);
     }
 

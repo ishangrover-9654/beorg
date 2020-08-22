@@ -3,7 +3,7 @@ package com.ishan.rd.beorg.config;
 import com.ishan.rd.beorg.batch.reader.IssueCsvFileReader;
 import com.ishan.rd.beorg.batch.writer.IssueImportArangoWriter;
 import com.ishan.rd.beorg.domain.dto.IssueImportDTO;
-import com.ishan.rd.beorg.domain.entities.IssueTag;
+import com.ishan.rd.beorg.domain.entities.MedIssueTag;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -51,7 +51,7 @@ public class IssuesBatchConfiguration {
     Step updateIssueDataStep(ItemReader<IssueImportDTO> profileItemReader,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("updateIssueDataStep")
-                .<IssueImportDTO, IssueTag>chunk(1)
+                .<IssueImportDTO, MedIssueTag>chunk(1)
                 .reader(profileItemReader)
                 .writer(writer())
                 //.processor(profileDataProcessor)
@@ -60,7 +60,7 @@ public class IssuesBatchConfiguration {
 
     @Bean
     @StepScope
-    public ItemWriter<IssueTag> writer() {
+    public ItemWriter<MedIssueTag> writer() {
         return new IssueImportArangoWriter();
     }
 }
