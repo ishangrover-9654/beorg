@@ -1,3 +1,17 @@
+#auth0:
+#    domain: dev-eboaafmw.us.auth0.com
+#    clientId: G6KbG7PJ4ITq21zcxPE5d9dL450yx59e
+
+
+com:
+    auth0:
+        domain: dev-eboaafmw.us.auth0.com
+        clientId: 2OGJdhmBJ7JccMTcLLPrcifkPsY3I7uM
+        clientSecret: lh-LIluP3b6vIY4mgwNSWM7M90_jPhKTeGOLo_ULUC8Swaynbs7BXvrsFBfdLpDz
+        managementApi:
+            clientId: vwPLitm817j0CvhZrj5DHMcisHUKxQAo
+            clientSecret: KdbBAD3JS5RZkiazwJAbd8aBau90fpwVGwIFirGk4KoRQ-virG6jCUP4yZP_jPWZ
+            grantType: client_credentials
 spring:
     data:
         arangodb:
@@ -5,13 +19,17 @@ spring:
             hosts: 127.0.0.1:8529
             password: 123456
             user: root
+
+        mongodb:
+            database: beorgdb
+            host: localhost
+            port: 27017
     autoconfigure:
         exclude:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
     batch:
         job:
             enabled: false
-
     servlet:
         multipart:
             enabled: true
@@ -21,5 +39,50 @@ spring:
     http:
         multipart:
             enabled: true
+
+    main:
+        allow-bean-definition-overriding: true
+#    security:
+#        oauth2:
+#            resource:
+#                id: http://localhost:8080/api
+#    security:
+#        oauth2:
+#            client:
+#                registration:
+#                    okta:
+#                        client-id: 0oaw8lfz38uE67sdS4x6
+#                        client-secret: 5xu5fIXjoF-RViMxuoxO-1xtZu3u2QG5fgIIAa9M
+#                        scope: profile
+#                provider:
+#                    okta:
+#                        issuer-uri: https://dev-488004.oktapreview.com/oauth2/default
+#                        authorization-uri: https://dev-oktapreview.okta.com/oauth2/default/v1/authorize
+#                        token-uri: https://dev-488004.oktapreview.com/oauth2/default/v1/token
+#                        user-info-uri: https://dev-488004.oktapreview.com/oauth2/default/v1/userinfo
+#                        jwk-set-uri: https://dev-488004.oktapreview.com/oauth2/default/v1/keys
+
+#okta:
+#    oauth2:
+#        issuer: https://dev-488004.okta.com/oauth2/default
+#        client-id: 0oaw8lfz38uE67sdS4x6
+#        client-secret: 5xu5fIXjoF-RViMxuoxO-1xtZu3u2QG5fgIIAa9M
+#        redirect-uri: /authorization-code/callback
+
+
 file:
     upload-dir: /Users/hp/uploads
+
+authentication-test:
+    auth:
+        tokenSecret: myTokenSecret
+        tokenExpirationMsec: 3600000 #1 hour
+        refreshTokenExpirationMsec: 7776000000 #90 days
+        accessTokenCookieName: accessToken
+        refreshTokenCookieName: refreshToken
+
+
+
+
+
+

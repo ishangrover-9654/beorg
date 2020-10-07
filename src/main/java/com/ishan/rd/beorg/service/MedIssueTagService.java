@@ -25,7 +25,9 @@ public class MedIssueTagService {
 
     public Iterable<MedIssueTag> findAll() {
         System.out.println("in findall");
-        return issueTagRepository.findAll();
+        Iterable<MedIssueTag> medIssueTagList = issueTagRepository.findAll();
+
+        return medIssueTagList;
     }
 
     public void importIssuesAndSpecialities() throws JobParametersInvalidException,

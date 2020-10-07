@@ -1,7 +1,10 @@
 package com.ishan.rd.beorg.config;
 
 import com.arangodb.ArangoDB;
+import com.arangodb.springframework.annotation.EnableArangoAuditing;
+import com.arangodb.springframework.annotation.EnableArangoRepositories;
 import com.arangodb.springframework.config.ArangoConfiguration;
+import com.ishan.rd.beorg.domain.entities.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -11,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 //@Configuration
+//@EnableArangoAuditing(auditorAwareRef = "auditorProvider")
+//@EnableArangoRepositories
 public class ArangoDBConfig implements ArangoConfiguration {
-    public static final String DB = "spring-test-db";
+    public static final String DB = "beorgdb";
 
     @Override
     public ArangoDB.Builder arango() {
@@ -24,15 +29,8 @@ public class ArangoDBConfig implements ArangoConfiguration {
         return DB;
     }
 
-    @Override
-    public Collection<Converter<?, ?>> customConverters() {
-        final Collection<Converter<?, ?>> converters = new ArrayList<>();
-       /* converters.add(new CustomMappingTest.CustomVPackReadTestConverter());
-        converters.add(new CustomMappingTest.CustomVPackWriteTestConverter());
-        converters.add(new CustomMappingTest.CustomDBEntityReadTestConverter());
-        converters.add(new CustomMappingTest.CustomDBEntityWriteTestConverter());*/
-        return converters;
+    @Bean
+    public AuditorAware<User> auditorProvider() {
+        return new AuditorProvider();
     }
-
-
 }

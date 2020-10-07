@@ -99,46 +99,57 @@ public class MedicalRecordService {
 
 
     public void save2(MedicalRecordDto medicalRecordDto, MultipartFile[] imageFiles) {
+        ArangoDatabase db = null;
+        StreamTransactionEntity tx = null;
+        try{
+            //TODO - Create below schema at start up
+            db = template.driver().db("beorgdb");
+            template.collection(C_MED_ISSUES, new CollectionCreateOptions().
+                    keyOptions(false, KeyType.autoincrement, 1,1));
 
-        //TODO - Create below schema at start up
-        ArangoDatabase db = template.driver().db("beorgdb");
-        template.collection(C_MED_ISSUES, new CollectionCreateOptions().
-                keyOptions(false, KeyType.autoincrement, 1,1));
+            template.collection(C_MED_RECORD, new CollectionCreateOptions().
+                    keyOptions(false, KeyType.autoincrement, 1,1));
 
-        template.collection(C_MED_RECORD, new CollectionCreateOptions().
-                keyOptions(false, KeyType.autoincrement, 1,1));
+            template.collection(E_HAVING_ISSUE, new CollectionCreateOptions().
+                    keyOptions(false, KeyType.autoincrement, 1,1).
+                    type(CollectionType.EDGES));
 
-        template.collection(E_HAVING_ISSUE, new CollectionCreateOptions().
-                keyOptions(false, KeyType.autoincrement, 1,1).
-                type(CollectionType.EDGES));
+            //TODO - Explore through db.transactions() or better way to perform transactions
+            tx =db.beginStreamTransaction(new StreamTransactionOptions()
+                    .readCollections().writeCollections(C_MED_ISSUES, C_MED_RECORD, E_HAVING_ISSUE).
+                            readCollections(C_MED_ISSUES, C_MED_RECORD));
 
-        //TODO - Explore through db.transactions() or better way to perform transactions
-        StreamTransactionEntity tx =db.beginStreamTransaction(new StreamTransactionOptions()
-        .readCollections().writeCollections(C_MED_ISSUES, C_MED_RECORD, E_HAVING_ISSUE).
-                readCollections(C_MED_ISSUES, C_MED_RECORD));
+            DocumentCreateOptions opts = new DocumentCreateOptions().streamTransactionId(tx.getId());
 
-        DocumentCreateOptions opts = new DocumentCreateOptions().streamTransactionId(tx.getId());
+            List<UploadFileResponse> uploadFileResponse = Arrays.asList(imageFiles).stream().
+                    map(file -> uploadFile(file)).collect(Collectors.toList());
+            //Create medical record
+            MedicalRecord medicalRecord = medicalRecordMapper.dtoToEntity(medicalRecordDto);
+            medicalRecord.setImageFiles(uploadFileResponse);
+            DocumentCreateEntity<MedicalRecord> txMedRec =
+                    db.collection(C_MED_RECORD).insertDocument(medicalRecord, opts);
 
-        List<UploadFileResponse> uploadFileResponse = Arrays.asList(imageFiles).stream().
-                map(file -> uploadFile(file)).collect(Collectors.toList());
-        //Create medical record
-        MedicalRecord medicalRecord = medicalRecordMapper.dtoToEntity(medicalRecordDto);
-        medicalRecord.setImageFiles(uploadFileResponse);
-        DocumentCreateEntity<MedicalRecord> txMedRec =
-                db.collection(C_MED_RECORD).insertDocument(medicalRecord, opts);
+            //Create new Issue tags if any
+            MultiDocumentEntity<DocumentCreateEntity<MedIssueDto>> txIssueTag  =
+                    db.collection(C_MED_ISSUES).insertDocuments(medicalRecordDto.getIssues(),
+                            opts.overwriteMode(OverwriteMode.ignore));
 
-        //Create new Issue tags if any
-        MultiDocumentEntity<DocumentCreateEntity<MedIssueDto>> txIssueTag  =
-                db.collection(C_MED_ISSUES).insertDocuments(medicalRecordDto.getIssues(),
-                opts.overwriteMode(OverwriteMode.ignore));
+            //Create Edge for Medical record with multiple issue tags
+            List<BaseEdgeDto> havingIssueEdges = txIssueTag.getDocuments().stream().
+                    map(doc -> new BaseEdgeDto(txMedRec.getId(), doc.getId())).collect(Collectors.toList());
+            db.collection(E_HAVING_ISSUE).insertDocuments(havingIssueEdges, opts);
+            int j = 10 / 0;
 
-        //Create Edge for Medical record with multiple issue tags
-        List<BaseEdgeDto> havingIssueEdges = txIssueTag.getDocuments().stream().
-                map(doc -> new BaseEdgeDto(txMedRec.getId(), doc.getId())).collect(Collectors.toList());
-        db.collection(E_HAVING_ISSUE).insertDocuments(havingIssueEdges, opts);
+            db.commitStreamTransaction(tx.getId());
+            //throw new RuntimeException();
+
+        }
+        catch (Exception e){
+            db.abortStreamTransaction(tx.getId());
+            System.out.println(tx.getStatus());
+        }
 
 
-        db.commitStreamTransaction(tx.getId());
 
     }
 
