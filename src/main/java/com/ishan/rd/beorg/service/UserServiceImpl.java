@@ -1,7 +1,6 @@
 package com.ishan.rd.beorg.service;
 
 
-import com.arangodb.springframework.core.ArangoOperations;
 import com.ishan.rd.beorg.domain.dto.LoginRequest;
 import com.ishan.rd.beorg.domain.dto.LoginResponse;
 import com.ishan.rd.beorg.domain.dto.Token;
@@ -9,13 +8,12 @@ import com.ishan.rd.beorg.domain.dto.UserSummary;
 import com.ishan.rd.beorg.domain.entities.Role;
 import com.ishan.rd.beorg.domain.entities.RoleEnum;
 import com.ishan.rd.beorg.domain.entities.User;
-import com.ishan.rd.beorg.repository.RoleRepository;
-import com.ishan.rd.beorg.repository.UserRepository;
+import com.ishan.rd.beorg.repository.mongo.RoleRepository;
+import com.ishan.rd.beorg.repository.mongo.UserRepository;
 import com.ishan.rd.beorg.security.CookieUtil;
 import com.ishan.rd.beorg.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**

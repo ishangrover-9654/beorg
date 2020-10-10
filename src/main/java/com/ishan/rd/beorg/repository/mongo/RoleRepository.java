@@ -1,4 +1,4 @@
-package com.ishan.rd.beorg.repository;
+package com.ishan.rd.beorg.repository.mongo;
 
 
 import com.ishan.rd.beorg.domain.entities.Role;

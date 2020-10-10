@@ -1,7 +1,7 @@
 package com.ishan.rd.beorg.runner;
 
 import com.ishan.rd.beorg.domain.entities.MedIssueTag;
-import com.ishan.rd.beorg.repository.MedIssueTagRepository;
+import com.ishan.rd.beorg.repository.arango.MedIssueTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ComponentScan;

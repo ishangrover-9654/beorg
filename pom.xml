@@ -99,6 +99,17 @@
 			<artifactId>arangodb-java-driver</artifactId>
 			<version>6.7.5</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.arangodb</groupId>
+			<artifactId>arangodb-spring-data</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.1</version>
+		</dependency>
 		<!--<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>mvc-auth-commons</artifactId>

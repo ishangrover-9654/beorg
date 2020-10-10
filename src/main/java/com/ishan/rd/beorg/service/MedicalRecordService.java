@@ -13,9 +13,9 @@ import com.ishan.rd.beorg.domain.entities.MedicalRecord;
 import com.ishan.rd.beorg.domain.dto.MedicalRecordDto;
 import com.ishan.rd.beorg.domain.edges.HavingIssueEdge;
 import com.ishan.rd.beorg.mapping.MedicalRecordMapper;
-import com.ishan.rd.beorg.repository.HavingIssueEdgeRepository;
-import com.ishan.rd.beorg.repository.MedIssueTagRepository;
-import com.ishan.rd.beorg.repository.MedicalRecordRepository;
+import com.ishan.rd.beorg.repository.arango.HavingIssueEdgeRepository;
+import com.ishan.rd.beorg.repository.arango.MedIssueTagRepository;
+import com.ishan.rd.beorg.repository.arango.MedicalRecordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -138,10 +138,7 @@ public class MedicalRecordService {
             List<BaseEdgeDto> havingIssueEdges = txIssueTag.getDocuments().stream().
                     map(doc -> new BaseEdgeDto(txMedRec.getId(), doc.getId())).collect(Collectors.toList());
             db.collection(E_HAVING_ISSUE).insertDocuments(havingIssueEdges, opts);
-            int j = 10 / 0;
-
             db.commitStreamTransaction(tx.getId());
-            //throw new RuntimeException();
 
         }
         catch (Exception e){

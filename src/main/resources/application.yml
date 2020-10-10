@@ -14,11 +14,11 @@ com:
             grantType: client_credentials
 spring:
     data:
-        arangodb:
-            database: beorgdb
-            hosts: 127.0.0.1:8529
-            password: 123456
-            user: root
+#        arangodb:
+#            database: beorgdb
+#            hosts: 127.0.0.1:8529
+#            password: 123456
+#            user: root
 
         mongodb:
             database: beorgdb
@@ -40,8 +40,8 @@ spring:
         multipart:
             enabled: true
 
-    main:
-        allow-bean-definition-overriding: true
+#    main:
+#        allow-bean-definition-overriding: true
 #    security:
 #        oauth2:
 #            resource:
@@ -81,7 +81,9 @@ authentication-test:
         accessTokenCookieName: accessToken
         refreshTokenCookieName: refreshToken
 
-
+arangodb:
+    hosts: 127.0.0.1:8529
+    password: 123456
 
 
 

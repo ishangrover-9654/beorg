@@ -1,3 +1,4 @@
+/*
 package com.ishan.rd.beorg.filter;
 
 import org.springframework.core.Ordered;
@@ -37,4 +38,4 @@ public class CORSFilter implements Filter {
     public void destroy() {
     }
 
-}
+}*/

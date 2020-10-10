@@ -1,7 +1,7 @@
 package com.ishan.rd.beorg.service;
 
 import com.ishan.rd.beorg.domain.entities.User;
-import com.ishan.rd.beorg.repository.UserRepository;
+import com.ishan.rd.beorg.repository.mongo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
